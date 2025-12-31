@@ -198,7 +198,7 @@ export default function AdminCustomers() {
       </div>
 
       {/* Content */}
-      <div className="p-4">
+      <div className="max-w-7xl mx-auto p-4">
         {/* Desktop Table View */}
         <div className="hidden lg:block bg-white rounded-xl border border-gray-200 overflow-hidden">
           <div className="overflow-x-auto">
