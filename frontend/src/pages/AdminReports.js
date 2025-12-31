@@ -198,7 +198,7 @@ const AdminReports = () => {
       </div>
 
       {/* Content */}
-      <div className="p-4 space-y-4">
+      <div className="max-w-7xl mx-auto p-4 space-y-4">
         {loading ? (
           <div className="text-center py-12">
             <RefreshCw className="w-12 h-12 animate-spin mx-auto text-[#1A4D2E] mb-4" />
