@@ -1,0 +1,126 @@
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Settings as SettingsIcon, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import api from '../utils/api';
+import { toast } from 'sonner';
+
+export default function AdminSettings() {
+  const { t } = useTranslation();
+  const [settings, setSettings] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const response = await api.get('/admin/settings');
+      const settingsObj = {};
+      response.data.settings.forEach(s => {
+        settingsObj[s.key] = s.value;
+      });
+      setSettings(settingsObj);
+    } catch (error) {
+      toast.error(t('loadSettingsFailed'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateSetting = async (key, value) => {
+    setSaving(true);
+    try {
+      await api.put(`/admin/settings/${key}?value=${encodeURIComponent(value)}`);
+      toast.success(t('updateSuccess'));
+    } catch (error) {
+      console.error('Update setting error:', error);
+      toast.error(t('updateFailed'));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return <div className="flex items-center justify-center min-h-screen" data-testid="loading-spinner">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1A4D2E]"></div>
+    </div>;
+  }
+
+  return (
+    <div className="min-h-screen bg-[#F9FAF9]">
+      <header className="bg-[#1A4D2E] text-white py-6 px-4">
+        <div className="container mx-auto max-w-6xl flex items-center gap-4">
+          <Link to="/admin/dashboard" data-testid="back-btn">
+            <ArrowRight className="w-6 h-6" />
+          </Link>
+          <h1 className="text-2xl font-bold" data-testid="page-title">{t('settings')}</h1>
+        </div>
+      </header>
+
+      <div className="container mx-auto max-w-2xl px-4 py-8">
+        <div className="bg-white rounded-xl p-6 border border-emerald-100 shadow-sm space-y-6" data-testid="settings-form">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              {t('pointsEarningCriteria')}
+            </label>
+            <input
+              type="number"
+              value={settings.points_multiplier || 10}
+              onChange={(e) => setSettings({...settings, points_multiplier: e.target.value})}
+              onBlur={(e) => updateSetting('points_multiplier', e.target.value)}
+              className="w-full px-4 py-3 border border-emerald-200 rounded-xl focus:ring-2 focus:ring-[#1A4D2E] focus:border-transparent"
+              data-testid="points-multiplier-input"
+              min="1"
+            />
+            <p className="text-xs text-gray-500 mt-2">
+              {t('pointsEarningExample')}
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              {t('rewardValueCriteria')}
+            </label>
+            <input
+              type="number"
+              value={settings.points_reward_multiplier || 10}
+              onChange={(e) => setSettings({...settings, points_reward_multiplier: e.target.value})}
+              onBlur={(e) => updateSetting('points_reward_multiplier', e.target.value)}
+              className="w-full px-4 py-3 border border-emerald-200 rounded-xl focus:ring-2 focus:ring-[#1A4D2E] focus:border-transparent"
+              data-testid="points-reward-multiplier-input"
+              min="1"
+            />
+            <p className="text-xs text-gray-500 mt-2">
+              {t('rewardValueExample')}
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              {t('lastSyncedInvoiceNumber')}
+            </label>
+            <input
+              type="number"
+              value={settings.last_synced_invoice || 0}
+              onChange={(e) => setSettings({...settings, last_synced_invoice: e.target.value})}
+              onBlur={(e) => updateSetting('last_synced_invoice', e.target.value)}
+              className="w-full px-4 py-3 border border-emerald-200 rounded-xl focus:ring-2 focus:ring-[#1A4D2E] focus:border-transparent"
+              data-testid="last-synced-invoice-input"
+            />
+            <p className="text-xs text-gray-500 mt-2">{t('systemStartsFromNext')}</p>
+          </div>
+
+          <div className="pt-4">
+            <p className="text-sm text-gray-600">
+              <SettingsIcon className="inline w-4 h-4 ml-2" />
+              {t('updateRewaaSettingsNote')}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
