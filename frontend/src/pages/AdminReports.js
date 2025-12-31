@@ -353,29 +353,29 @@ const AdminReports = () => {
                 <div className="grid grid-cols-1 gap-3">
                   <StatCard
                     title="معدل النمو"
-                    value={`${performanceReports.growth_rate.toFixed(1)}%`}
-                    subtitle={`${performanceReports.new_customers_current} عميل جديد`}
-                    trend={performanceReports.growth_rate}
+                    value={`${(performanceReports.growth_rate || 0).toFixed(1)}%`}
+                    subtitle={`${performanceReports.new_customers_current || 0} عميل جديد`}
+                    trend={performanceReports.growth_rate || 0}
                     icon={TrendingUp}
                     color="green"
                   />
                   <StatCard
                     title="معدل الاحتفاظ"
-                    value={`${performanceReports.retention_rate.toFixed(1)}%`}
-                    subtitle={`${performanceReports.retained_customers} عميل محتفظ`}
+                    value={`${(performanceReports.retention_rate || 0).toFixed(1)}%`}
+                    subtitle={`${performanceReports.retained_customers || 0} عميل محتفظ`}
                     icon={Users}
                     color="blue"
                   />
                   <StatCard
                     title="ROI النقاط"
-                    value={`${performanceReports.roi_percentage.toFixed(1)}%`}
+                    value={`${(performanceReports.roi_percentage || 0).toFixed(1)}%`}
                     subtitle="العائد على الاستثمار"
                     icon={Activity}
                     color="purple"
                   />
                   <StatCard
                     title="CLV"
-                    value={`${performanceReports.customer_lifetime_value.toFixed(0)} ر.س`}
+                    value={`${(performanceReports.customer_lifetime_value || 0).toFixed(0)} ر.س`}
                     subtitle="قيمة العميل مدى الحياة"
                     icon={Award}
                     color="orange"
@@ -387,17 +387,17 @@ const AdminReports = () => {
                   <div className="space-y-2">
                     <div className="flex justify-between p-3 bg-gray-50 rounded-lg">
                       <span className="text-sm">العملاء الجدد (الحالية)</span>
-                      <span className="font-bold">{performanceReports.new_customers_current}</span>
+                      <span className="font-bold">{performanceReports.new_customers_current || 0}</span>
                     </div>
                     <div className="flex justify-between p-3 bg-gray-50 rounded-lg">
                       <span className="text-sm">العملاء الجدد (السابقة)</span>
-                      <span className="font-bold">{performanceReports.new_customers_previous}</span>
+                      <span className="font-bold">{performanceReports.new_customers_previous || 0}</span>
                     </div>
                     <div className="flex justify-between p-3 bg-green-50 rounded-lg">
                       <span className="text-sm">الفرق</span>
                       <span className="font-bold text-green-600">
-                        {performanceReports.new_customers_current - performanceReports.new_customers_previous > 0 ? '+' : ''}
-                        {performanceReports.new_customers_current - performanceReports.new_customers_previous}
+                        {(performanceReports.new_customers_current || 0) - (performanceReports.new_customers_previous || 0) > 0 ? '+' : ''}
+                        {(performanceReports.new_customers_current || 0) - (performanceReports.new_customers_previous || 0)}
                       </span>
                     </div>
                   </div>
@@ -408,15 +408,15 @@ const AdminReports = () => {
                   <div className="space-y-2">
                     <div className="flex justify-between p-3 bg-gray-50 rounded-lg">
                       <span className="text-sm">قيمة النقاط الممنوحة</span>
-                      <span className="font-bold">{performanceReports.value_given_sar.toFixed(2)} ر.س</span>
+                      <span className="font-bold">{(performanceReports.value_given_sar || 0).toFixed(2)} ر.س</span>
                     </div>
                     <div className="flex justify-between p-3 bg-gray-50 rounded-lg">
                       <span className="text-sm">قيمة النقاط المستبدلة</span>
-                      <span className="font-bold">{performanceReports.value_redeemed_sar.toFixed(2)} ر.س</span>
+                      <span className="font-bold">{(performanceReports.value_redeemed_sar || 0).toFixed(2)} ر.س</span>
                     </div>
                     <div className="flex justify-between p-3 bg-blue-50 rounded-lg">
                       <span className="text-sm">إجمالي المبيعات</span>
-                      <span className="font-bold text-blue-600">{performanceReports.total_sales.toFixed(2)} ر.س</span>
+                      <span className="font-bold text-blue-600">{(performanceReports.total_sales || 0).toFixed(2)} ر.س</span>
                     </div>
                   </div>
                 </Card>
