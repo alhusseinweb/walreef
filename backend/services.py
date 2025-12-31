@@ -21,7 +21,7 @@ def send_otp_sms(phone: str, code: str) -> bool:
         
         if not account_sid or not auth_token or not verify_service:
             print("Twilio credentials not configured. Using mock mode.")
-            print(f"Mock OTP sent to {phone}: {code}")
+            print(f"✅ Mock OTP for {phone}: 1234 (Development Mode - Fixed Code)")
             return True
         
         client = Client(account_sid, auth_token)
