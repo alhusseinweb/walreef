@@ -304,15 +304,15 @@ const AdminReports = () => {
                   <div className="space-y-2">
                     <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
                       <span className="text-sm">إجمالي النقاط النشطة</span>
-                      <span className="font-bold text-lg">{pointsReports.total_active_points.toFixed(0)}</span>
+                      <span className="font-bold text-lg">{(pointsReports.total_active_points || 0).toFixed(0)}</span>
                     </div>
                     <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                       <span className="text-sm">متوسط النقاط لكل عميل</span>
-                      <span className="font-bold text-lg">{pointsReports.average_points_per_customer.toFixed(1)}</span>
+                      <span className="font-bold text-lg">{(pointsReports.average_points_per_customer || 0).toFixed(1)}</span>
                     </div>
                     <div className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
                       <span className="text-sm">النقاط المنتهية</span>
-                      <span className="font-bold text-lg">{pointsReports.total_expired.toFixed(0)}</span>
+                      <span className="font-bold text-lg">{(pointsReports.total_expired || 0).toFixed(0)}</span>
                     </div>
                   </div>
                 </Card>
@@ -323,14 +323,14 @@ const AdminReports = () => {
                     <PieChart>
                       <Pie
                         data={[
-                          { name: "مكتسبة", value: pointsReports.total_earned },
-                          { name: "مستبدلة", value: pointsReports.total_redeemed },
-                          { name: "نشطة", value: pointsReports.total_active_points }
+                          { name: "مكتسبة", value: pointsReports.total_earned || 0 },
+                          { name: "مستبدلة", value: pointsReports.total_redeemed || 0 },
+                          { name: "نشطة", value: pointsReports.total_active_points || 0 }
                         ]}
                         cx="50%"
                         cy="50%"
                         labelLine={false}
-                        label={(entry) => `${entry.value.toFixed(0)}`}
+                        label={(entry) => `${(entry.value || 0).toFixed(0)}`}
                         outerRadius={80}
                         fill="#8884d8"
                         dataKey="value"
