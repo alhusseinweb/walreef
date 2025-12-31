@@ -240,7 +240,7 @@ const AdminReports = () => {
                   columns={[
                     { label: "الاسم", key: "name" },
                     { label: "الهاتف", key: "phone" },
-                    { label: "النقاط", key: "total_points", render: (val) => val.toFixed(0) }
+                    { label: "النقاط", key: "total_points", render: (val) => (val || 0).toFixed(0) }
                   ]}
                 />
                 <MobileTable
