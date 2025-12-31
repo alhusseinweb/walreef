@@ -38,7 +38,7 @@ def send_otp_sms(phone: str, code: str) -> bool:
     except Exception as e:
         print(f"Error sending SMS via Twilio Verify: {e}")
         # Fallback to mock mode
-        print(f"Mock OTP sent to {phone}: {code}")
+        print(f"✅ Mock OTP for {phone}: 1234 (Development Mode - Fixed Code)")
         return True
 
 # SendGrid Email Service
