@@ -149,7 +149,7 @@ export default function AdminDashboard() {
             data-testid="nav-customers"
           >
             <Users className="w-8 h-8 md:w-10 md:h-10 text-[#1A4D2E] mx-auto mb-2 md:mb-3" />
-            <p className="font-bold text-[#1A4D2E] text-sm md:text-base">{t('customers')}</p>
+            <p className="font-bold text-[#1A4D2E] text-sm md:text-base">العملاء</p>
           </Link>
 
           <Link
@@ -158,7 +158,7 @@ export default function AdminDashboard() {
             data-testid="nav-redeem"
           >
             <Gift className="w-8 h-8 md:w-10 md:h-10 text-[#FFC107] mx-auto mb-2 md:mb-3" />
-            <p className="font-bold text-[#FFC107] text-sm md:text-base">{t('redeemPoints')}</p>
+            <p className="font-bold text-[#FFC107] text-sm md:text-base">استبدال النقاط</p>
           </Link>
 
           <Link
@@ -167,7 +167,7 @@ export default function AdminDashboard() {
             data-testid="nav-staff"
           >
             <UserCog className="w-8 h-8 md:w-10 md:h-10 text-blue-600 mx-auto mb-2 md:mb-3" />
-            <p className="font-bold text-blue-600 text-sm md:text-base">{t('staff')}</p>
+            <p className="font-bold text-blue-600 text-sm md:text-base">الموظفين</p>
           </Link>
 
           <Link
@@ -176,7 +176,7 @@ export default function AdminDashboard() {
             data-testid="nav-reports"
           >
             <FileText className="w-8 h-8 md:w-10 md:h-10 text-purple-600 mx-auto mb-2 md:mb-3" />
-            <p className="font-bold text-purple-600 text-sm md:text-base">{t('reports')}</p>
+            <p className="font-bold text-purple-600 text-sm md:text-base">التقارير</p>
           </Link>
 
           <Link
@@ -185,7 +185,7 @@ export default function AdminDashboard() {
             data-testid="nav-sync"
           >
             <RefreshCw className="w-8 h-8 md:w-10 md:h-10 text-orange-600 mx-auto mb-2 md:mb-3" />
-            <p className="font-bold text-orange-600 text-sm md:text-base">{t('sync')}</p>
+            <p className="font-bold text-orange-600 text-sm md:text-base">المزامنة</p>
           </Link>
 
           <Link
