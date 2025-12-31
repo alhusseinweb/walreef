@@ -110,7 +110,7 @@ export default function AdminDashboard() {
                 <Users className="w-6 h-6 text-[#1A4D2E]" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">{t('totalCustomers')}</p>
+                <p className="text-sm text-gray-600">إجمالي العملاء</p>
                 <p className="text-2xl font-bold text-[#1A4D2E]">{stats?.total_customers || 0}</p>
               </div>
             </div>
@@ -122,7 +122,7 @@ export default function AdminDashboard() {
                 <Gift className="w-6 h-6 text-[#FFC107]" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">{t('activePoints')}</p>
+                <p className="text-sm text-gray-600">النقاط النشطة</p>
                 <p className="text-2xl font-bold text-[#FFC107]">{(stats?.total_active_points || 0).toFixed(0)}</p>
               </div>
             </div>
@@ -134,8 +134,8 @@ export default function AdminDashboard() {
                 <TrendingUp className="w-6 h-6 text-purple-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">{t('pointsValueSAR')}</p>
-                <p className="text-2xl font-bold text-purple-600">{(stats?.points_value_sar || 0).toFixed(2)} {t('sar')}</p>
+                <p className="text-sm text-gray-600">قيمة النقاط بالريال</p>
+                <p className="text-2xl font-bold text-purple-600">{(stats?.points_value_sar || 0).toFixed(2)} ريال</p>
               </div>
             </div>
           </div>
