@@ -273,26 +273,26 @@ const AdminReports = () => {
                 <div className="grid grid-cols-1 gap-3">
                   <StatCard
                     title="النقاط المكتسبة"
-                    value={pointsReports.total_earned.toFixed(0)}
+                    value={(pointsReports.total_earned || 0).toFixed(0)}
                     icon={Award}
                     color="green"
                   />
                   <StatCard
                     title="النقاط المستبدلة"
-                    value={pointsReports.total_redeemed.toFixed(0)}
+                    value={(pointsReports.total_redeemed || 0).toFixed(0)}
                     icon={Activity}
                     color="blue"
                   />
                   <StatCard
                     title="معدل الاستبدال"
-                    value={`${pointsReports.redemption_rate.toFixed(1)}%`}
+                    value={`${(pointsReports.redemption_rate || 0).toFixed(1)}%`}
                     subtitle="نسبة النقاط المستبدلة"
                     icon={TrendingUp}
                     color="purple"
                   />
                   <StatCard
                     title="نقاط قريبة الانتهاء"
-                    value={pointsReports.points_expiring_soon.toFixed(0)}
+                    value={(pointsReports.points_expiring_soon || 0).toFixed(0)}
                     subtitle="خلال 30 يوم"
                     icon={Calendar}
                     color="orange"
