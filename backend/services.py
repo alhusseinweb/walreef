@@ -124,8 +124,13 @@ def verify_otp_twilio(phone: str, code: str) -> bool:
         verify_service = os.getenv('TWILIO_VERIFY_SERVICE')
         
         if not account_sid or not auth_token or not verify_service:
-            print("Twilio credentials not configured. Mock verification - accepting any code.")
-            return True
+            # Development Mode: Only accept fixed code "1234"
+            if code == "1234":
+                print(f"✅ Mock verification success for {phone}: Code 1234 accepted (Development Mode)")
+                return True
+            else:
+                print(f"❌ Mock verification failed for {phone}: Invalid code '{code}' (Expected: 1234)")
+                return False
         
         client = Client(account_sid, auth_token)
         
