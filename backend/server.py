@@ -1088,7 +1088,7 @@ async def get_customer_for_redemption(phone: str, current_user: dict = Depends(g
         points_value_sar = customer.get("active_points", 0) / reward_multiplier
         
         return {
-            "id": customer["id"],
+            "id": customer.get("customer_id", customer.get("id", "")),
             "name": customer["name"],
             "phone": format_phone_for_display(customer["phone"]),
             "phone_international": customer["phone"],
