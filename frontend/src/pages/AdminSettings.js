@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Settings as SettingsIcon, ArrowRight } from 'lucide-react';
+import { Settings as SettingsIcon, ArrowRight, Save } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import api from '../utils/api';
 import { toast } from 'sonner';
+import { motion } from 'framer-motion';
 
 export default function AdminSettings() {
   const { t } = useTranslation();
@@ -51,35 +52,45 @@ export default function AdminSettings() {
 
   return (
     <div className="min-h-screen bg-[#F9FAF9]">
-      <header className="bg-[#1A4D2E] text-white py-6 px-4">
-        <div className="container mx-auto max-w-6xl flex items-center gap-4">
+      {/* Header */}
+      <header className="bg-[#1A4D2E] text-white p-4">
+        <div className="max-w-2xl mx-auto flex items-center gap-3">
           <Link to="/admin/dashboard" data-testid="back-btn">
             <ArrowRight className="w-6 h-6" />
           </Link>
-          <h1 className="text-2xl font-bold" data-testid="page-title">{t('settings')}</h1>
+          <h1 className="text-xl md:text-2xl font-bold" data-testid="page-title">{t('settings')}</h1>
         </div>
       </header>
 
-      <div className="container mx-auto max-w-2xl px-4 py-8">
-        <div className="bg-white rounded-xl p-6 border border-emerald-100 shadow-sm space-y-6" data-testid="settings-form">
+      <div className="max-w-2xl mx-auto px-4 py-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white rounded-xl p-4 md:p-6 border border-emerald-100 shadow-sm space-y-6"
+          data-testid="settings-form"
+        >
+          {/* Points Multiplier */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               {t('pointsEarningCriteria')}
             </label>
-            <input
-              type="number"
-              value={settings.points_multiplier || 10}
-              onChange={(e) => setSettings({...settings, points_multiplier: e.target.value})}
-              onBlur={(e) => updateSetting('points_multiplier', e.target.value)}
-              className="w-full px-4 py-3 border border-emerald-200 rounded-xl focus:ring-2 focus:ring-[#1A4D2E] focus:border-transparent"
-              data-testid="points-multiplier-input"
-              min="1"
-            />
+            <div className="relative">
+              <input
+                type="number"
+                value={settings.points_multiplier || 10}
+                onChange={(e) => setSettings({...settings, points_multiplier: e.target.value})}
+                onBlur={(e) => updateSetting('points_multiplier', e.target.value)}
+                className="w-full px-4 py-3 border border-emerald-200 rounded-xl focus:ring-2 focus:ring-[#1A4D2E] focus:border-transparent text-base md:text-base"
+                data-testid="points-multiplier-input"
+                min="1"
+              />
+            </div>
             <p className="text-xs text-gray-500 mt-2">
               {t('pointsEarningExample')}
             </p>
           </div>
 
+          {/* Reward Multiplier */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               {t('rewardValueCriteria')}
@@ -89,7 +100,7 @@ export default function AdminSettings() {
               value={settings.points_reward_multiplier || 10}
               onChange={(e) => setSettings({...settings, points_reward_multiplier: e.target.value})}
               onBlur={(e) => updateSetting('points_reward_multiplier', e.target.value)}
-              className="w-full px-4 py-3 border border-emerald-200 rounded-xl focus:ring-2 focus:ring-[#1A4D2E] focus:border-transparent"
+              className="w-full px-4 py-3 border border-emerald-200 rounded-xl focus:ring-2 focus:ring-[#1A4D2E] focus:border-transparent text-base md:text-base"
               data-testid="points-reward-multiplier-input"
               min="1"
             />
@@ -98,6 +109,7 @@ export default function AdminSettings() {
             </p>
           </div>
 
+          {/* Last Synced Invoice */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               {t('lastSyncedInvoiceNumber')}
@@ -107,19 +119,22 @@ export default function AdminSettings() {
               value={settings.last_synced_invoice || 0}
               onChange={(e) => setSettings({...settings, last_synced_invoice: e.target.value})}
               onBlur={(e) => updateSetting('last_synced_invoice', e.target.value)}
-              className="w-full px-4 py-3 border border-emerald-200 rounded-xl focus:ring-2 focus:ring-[#1A4D2E] focus:border-transparent"
+              className="w-full px-4 py-3 border border-emerald-200 rounded-xl focus:ring-2 focus:ring-[#1A4D2E] focus:border-transparent text-base md:text-base"
               data-testid="last-synced-invoice-input"
             />
             <p className="text-xs text-gray-500 mt-2">{t('systemStartsFromNext')}</p>
           </div>
 
-          <div className="pt-4">
-            <p className="text-sm text-gray-600">
-              <SettingsIcon className="inline w-4 h-4 ml-2" />
-              {t('updateRewaaSettingsNote')}
-            </p>
+          {/* Info Note */}
+          <div className="pt-4 border-t border-gray-200">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <p className="text-sm text-blue-800 flex items-start gap-2">
+                <SettingsIcon className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                <span>{t('updateRewaaSettingsNote')}</span>
+              </p>
+            </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
