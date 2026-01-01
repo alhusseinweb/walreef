@@ -197,6 +197,12 @@ export default function RedeemPoints() {
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    searchCustomer();
+                  }
+                }}
                 placeholder={t('enterCustomerPhone')}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl text-base text-center"
                 dir="ltr"
