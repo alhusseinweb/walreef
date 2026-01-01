@@ -77,6 +77,7 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Landing />} />
+            <Route path="/terms" element={<TermsAndConditions />} />
             <Route path="/customer/login" element={<CustomerLogin />} />
             <Route path="/admin/login" element={<Navigate to="/customer/login" replace />} />
             
