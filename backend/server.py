@@ -1077,6 +1077,21 @@ async def trigger_manual_sync(current_admin: dict = Depends(get_current_admin)):
         # Run sync
         result = await sync_invoices_once(db)
         
+        # Check if sync failed and send notification
+        if result.get("status") == "error" or result.get("error"):
+            error_msg = result.get("error", "Unknown error")
+            await send_sync_failure_notification(
+                db, 
+                sync_type="manual",
+                error_message=error_msg,
+                details={
+                    "المشغّل": current_admin.get("name", "Unknown"),
+                    "Triggered by": current_admin.get("name", "Unknown"),
+                    "آخر فاتورة": str(result.get("last_invoice", "N/A")),
+                    "Last invoice": str(result.get("last_invoice", "N/A"))
+                }
+            )
+        
         return {
             "message": "Sync completed",
             "synced_count": result.get("synced_count", 0),
@@ -1087,6 +1102,16 @@ async def trigger_manual_sync(current_admin: dict = Depends(get_current_admin)):
         raise
     except Exception as e:
         logger.error(f"Error during manual sync: {e}")
+        # Send failure notification
+        await send_sync_failure_notification(
+            db,
+            sync_type="manual",
+            error_message=str(e),
+            details={
+                "المشغّل": current_admin.get("name", "Unknown") if current_admin else "Unknown",
+                "Triggered by": current_admin.get("name", "Unknown") if current_admin else "Unknown"
+            }
+        )
         raise HTTPException(status_code=500, detail=f"Sync failed: {str(e)}")
 
 @api_router.get("/admin/sync/status")
