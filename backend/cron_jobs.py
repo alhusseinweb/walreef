@@ -18,6 +18,7 @@ sys.path.append(str(Path(__file__).parent))
 from rewaa import rewaa_service
 from models import Invoice, PointsTransaction
 from utils import format_phone_for_twilio
+from email_service import send_sync_failure_notification
 import uuid
 
 ROOT_DIR = Path(__file__).parent
