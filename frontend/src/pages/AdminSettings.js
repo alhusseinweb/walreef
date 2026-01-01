@@ -182,6 +182,89 @@ export default function AdminSettings() {
             </div>
           </div>
         </motion.div>
+
+        {/* Email Notification Settings */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="bg-white rounded-xl p-4 md:p-6 border border-emerald-100 shadow-sm space-y-6 mt-6"
+          data-testid="email-settings-form"
+        >
+          <div className="flex items-center gap-3 pb-4 border-b border-gray-200">
+            <div className="bg-amber-100 p-2 rounded-lg">
+              <Mail className="w-5 h-5 text-amber-600" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-gray-900">إعدادات الإشعارات</h2>
+              <p className="text-sm text-gray-500">إشعارات البريد الإلكتروني عند فشل المزامنة</p>
+            </div>
+          </div>
+
+          {/* Notification Email */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              البريد الإلكتروني للإشعارات
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="email"
+                value={notificationEmail}
+                onChange={(e) => setNotificationEmail(e.target.value)}
+                placeholder="info@walreef.com"
+                className="flex-1 px-4 py-3 border border-emerald-200 rounded-xl focus:ring-2 focus:ring-[#1A4D2E] focus:border-transparent text-base"
+                data-testid="notification-email-input"
+                dir="ltr"
+              />
+              <button
+                onClick={updateNotificationEmail}
+                disabled={saving}
+                className="px-4 py-3 bg-[#1A4D2E] text-white rounded-xl hover:bg-[#143d24] disabled:opacity-50 flex items-center gap-2"
+                data-testid="save-email-btn"
+              >
+                <Save className="w-4 h-4" />
+                <span className="hidden sm:inline">حفظ</span>
+              </button>
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              سيتم إرسال إشعار لهذا البريد عند فشل المزامنة مع Rewaa
+            </p>
+          </div>
+
+          {/* Test Email Button */}
+          <div className="pt-4 border-t border-gray-200">
+            <button
+              onClick={sendTestEmail}
+              disabled={sendingTestEmail || !notificationEmail}
+              className={`w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${
+                testEmailSent 
+                  ? 'bg-green-500 text-white' 
+                  : 'bg-amber-500 hover:bg-amber-600 text-white disabled:opacity-50'
+              }`}
+              data-testid="test-email-btn"
+            >
+              {sendingTestEmail ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>جاري الإرسال...</span>
+                </>
+              ) : testEmailSent ? (
+                <>
+                  <CheckCircle className="w-5 h-5" />
+                  <span>تم الإرسال بنجاح!</span>
+                </>
+              ) : (
+                <>
+                  <Send className="w-5 h-5" />
+                  <span>إرسال رسالة اختبار</span>
+                </>
+              )}
+            </button>
+            <p className="text-xs text-gray-500 mt-2 text-center">
+              اختبر إعدادات البريد الإلكتروني بإرسال رسالة تجريبية
+            </p>
+          </div>
+        </motion.div>
       </div>
     </div>
   );
