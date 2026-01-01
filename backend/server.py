@@ -654,8 +654,13 @@ async def get_admin_stats(current_admin: dict = Depends(get_current_admin)):
         result = await db.customers.aggregate(pipeline).to_list(1)
         total_expired_points = result[0]["total_expired"] if result else 0
         
-        # Total points value in SAR
-        total_points_value = total_active_points
+        # Get reward multiplier to calculate SAR value
+        reward_setting = await db.settings.find_one({"key": "points_reward_multiplier"}, {"_id": 0})
+        reward_multiplier = float(reward_setting.get("value", 10)) if reward_setting else 10
+        
+        # Total points value in SAR (active_points / reward_multiplier)
+        # e.g., 500 points / 10 = 50 SAR
+        total_points_value_sar = total_active_points / reward_multiplier
         
         # New customers this month
         first_day_month = datetime.now(timezone.utc).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
@@ -671,7 +676,7 @@ async def get_admin_stats(current_admin: dict = Depends(get_current_admin)):
             "new_customers_month": new_customers_month,
             "total_active_points": round(total_active_points, 2),
             "total_expired_points": round(total_expired_points, 2),
-            "total_points_value_sar": round(total_points_value, 2),
+            "points_value_sar": round(total_points_value_sar, 2),
             "total_invoices": total_invoices
         }
     except Exception as e:
