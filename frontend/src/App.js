@@ -9,6 +9,7 @@ import { isAuthenticated, isAdmin, isCustomer, isStaff, getUserRole } from "./ut
 const Landing = lazy(() => import("./pages/Landing"));
 const TermsAndConditions = lazy(() => import("./pages/TermsAndConditions"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const FAQ = lazy(() => import("./pages/FAQ"));
 const CustomerLogin = lazy(() => import("./pages/CustomerLogin"));
 const CustomerRegister = lazy(() => import("./pages/CustomerRegister"));
 const CustomerDashboard = lazy(() => import("./pages/CustomerDashboard"));
@@ -80,6 +81,7 @@ function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/terms" element={<TermsAndConditions />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/faq" element={<FAQ />} />
             <Route path="/customer/login" element={<CustomerLogin />} />
             <Route path="/admin/login" element={<Navigate to="/customer/login" replace />} />
             

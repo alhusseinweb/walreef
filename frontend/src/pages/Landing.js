@@ -396,6 +396,14 @@ export default function Landing() {
                 {i18n.language === 'ar' ? 'سياسة الخصوصية' : 'Privacy Policy'}
               </Link>
               <span className="text-emerald-300">|</span>
+              <Link 
+                to="/faq" 
+                className="text-emerald-200 hover:text-white transition-colors text-sm underline"
+                data-testid="faq-link"
+              >
+                {i18n.language === 'ar' ? 'الأسئلة الشائعة' : 'FAQ'}
+              </Link>
+              <span className="text-emerald-300">|</span>
               <button 
                 onClick={() => setShowContactModal(true)}
                 className="text-emerald-200 hover:text-white transition-colors text-sm underline"
