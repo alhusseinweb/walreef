@@ -308,3 +308,4 @@ class CheckTrustedDeviceRequest(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
+    device_token: Optional[str] = None  # Returned when device is trusted
