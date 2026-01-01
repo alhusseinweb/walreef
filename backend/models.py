@@ -257,6 +257,8 @@ class SendOTPRequest(BaseModel):
 class VerifyOTPRequest(BaseModel):
     phone: str = Field(..., min_length=9, max_length=15)
     code: str = Field(..., min_length=4, max_length=6)
+    trust_device: bool = False  # Option to trust this device for 90 days
+    device_token: Optional[str] = None  # Existing device token if available
     
     @field_validator('phone')
     @classmethod
@@ -274,6 +276,33 @@ class VerifyOTPRequest(BaseModel):
     def validate_otp(cls, v):
         if not v or not v.isdigit() or len(v) < 4 or len(v) > 6:
             raise ValueError('رمز التحقق يجب أن يكون 4-6 أرقام | OTP code must be 4-6 digits')
+        return v
+
+class TrustedDevice(BaseModel):
+    """Model for trusted devices that can skip OTP verification"""
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    phone: str  # Admin/Staff phone (international format)
+    device_token: str  # Unique token for this device
+    device_info: Optional[str] = None  # Browser/device info
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    expires_at: datetime  # Token expires after 90 days
+    last_used_at: Optional[datetime] = None
+
+class CheckTrustedDeviceRequest(BaseModel):
+    phone: str = Field(..., min_length=9, max_length=15)
+    device_token: str = Field(..., min_length=32, max_length=128)
+    
+    @field_validator('phone')
+    @classmethod
+    def validate_phone(cls, v):
+        if not v:
+            raise ValueError('رقم الجوال مطلوب | Phone number is required')
+        v = v.replace(' ', '').replace('-', '')
+        patterns = [r'^05\d{8}$', r'^5\d{8}$', r'^\+9665\d{8}$', r'^9665\d{8}$']
+        if not any(re.match(pattern, v) for pattern in patterns):
+            raise ValueError('رقم جوال غير صحيح | Invalid phone number format')
         return v
 
 class TokenResponse(BaseModel):
