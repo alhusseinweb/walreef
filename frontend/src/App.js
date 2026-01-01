@@ -7,6 +7,7 @@ import { isAuthenticated, isAdmin, isCustomer, isStaff, getUserRole } from "./ut
 
 // Lazy load pages
 const Landing = lazy(() => import("./pages/Landing"));
+const TermsAndConditions = lazy(() => import("./pages/TermsAndConditions"));
 const CustomerLogin = lazy(() => import("./pages/CustomerLogin"));
 const CustomerRegister = lazy(() => import("./pages/CustomerRegister"));
 const CustomerDashboard = lazy(() => import("./pages/CustomerDashboard"));
