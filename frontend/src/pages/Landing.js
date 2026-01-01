@@ -279,10 +279,22 @@ export default function Landing() {
 
       {/* Footer */}
       <footer className="bg-[#1A4D2E] text-white py-8">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-sm" data-testid="footer-text">
-            {new Date().getFullYear()} © {t('tamweenatWahatAlReef')} - {t('allRightsReserved')}
-          </p>
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="flex flex-col items-center gap-4">
+            {/* Terms Link */}
+            <Link 
+              to="/terms" 
+              className="text-emerald-200 hover:text-white transition-colors text-sm underline"
+              data-testid="terms-link"
+            >
+              {i18n.language === 'ar' ? 'الشروط والأحكام' : 'Terms and Conditions'}
+            </Link>
+            
+            {/* Copyright */}
+            <p className="text-sm text-center" data-testid="footer-text">
+              {new Date().getFullYear()} © {t('tamweenatWahatAlReef')} - {t('allRightsReserved')}
+            </p>
+          </div>
         </div>
       </footer>
     </div>
