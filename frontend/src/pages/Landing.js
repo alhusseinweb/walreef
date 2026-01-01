@@ -1,12 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Store, Gift, TrendingUp, Users, X } from 'lucide-react';
+import { Store, Gift, TrendingUp, Users, X, Phone, Mail, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 
 export default function Landing() {
   const { t, i18n } = useTranslation();
   const [showModal, setShowModal] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
   
   const toggleLanguage = () => {
     const newLang = i18n.language === 'ar' ? 'en' : 'ar';
