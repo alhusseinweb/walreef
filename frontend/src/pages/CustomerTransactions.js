@@ -1,10 +1,30 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Receipt, TrendingUp, TrendingDown, RotateCcw, Gift, Calendar } from 'lucide-react';
+import { Receipt, TrendingUp, TrendingDown, RotateCcw, Gift, Calendar, Clock } from 'lucide-react';
 import api from '../utils/api';
 import BottomNav from '../components/BottomNav';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+
+// Helper function to calculate expiry date (1 year from transaction date)
+const getExpiryDate = (createdAt) => {
+  const date = new Date(createdAt);
+  date.setFullYear(date.getFullYear() + 1);
+  return date;
+};
+
+// Helper function to check if points are about to expire (within 30 days)
+const isAboutToExpire = (expiryDate) => {
+  const now = new Date();
+  const diffTime = expiryDate - now;
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays > 0 && diffDays <= 30;
+};
+
+// Helper function to check if points have expired
+const hasExpired = (expiryDate) => {
+  return new Date() > expiryDate;
+};
 
 // Helper function to get transaction display info
 const getTransactionInfo = (type, t) => {
