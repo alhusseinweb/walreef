@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Search, Gift, User, Phone, CheckCircle, ArrowRight, Loader2, LogOut, Award } from 'lucide-react';
+import { Search, Gift, User, Phone, CheckCircle, ArrowRight, Loader2, LogOut, Award, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import api from '../utils/api';
 import { toast } from 'sonner';
@@ -17,6 +17,15 @@ export default function RedeemPoints() {
   const [loading, setLoading] = useState(false);
   const [searching, setSearching] = useState(false);
   const [redemptionResult, setRedemptionResult] = useState(null);
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'ar' ? 'en' : 'ar';
+    i18n.changeLanguage(newLang);
+    document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = newLang;
+  };
+
+  const isArabic = i18n.language === 'ar';
 
   const searchCustomer = async () => {
     if (!phone || phone.length < 9) {
