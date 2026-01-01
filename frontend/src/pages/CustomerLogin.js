@@ -437,6 +437,40 @@ export default function CustomerLogin() {
                 dir="ltr"
               />
             </div>
+            
+            {/* Trust Device Option - Only for Admin/Staff */}
+            {selectedRole === 'admin' && (
+              <div 
+                className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                  trustDevice 
+                    ? 'bg-amber-50 border-amber-400' 
+                    : 'bg-gray-50 border-gray-200 hover:border-gray-300'
+                }`}
+                onClick={() => setTrustDevice(!trustDevice)}
+              >
+                <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${
+                  trustDevice 
+                    ? 'bg-amber-500 border-amber-500' 
+                    : 'border-gray-300 bg-white'
+                }`}>
+                  {trustDevice && (
+                    <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <Smartphone className="w-4 h-4 text-amber-600" />
+                    <span className="font-medium text-gray-800">الوثوق في هذا الجهاز</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    تخطي رمز التحقق لمدة 90 يوماً على هذا الجهاز
+                  </p>
+                </div>
+              </div>
+            )}
+            
             <button
               onClick={verifyOTP}
               disabled={loading}
@@ -451,6 +485,7 @@ export default function CustomerLogin() {
                 setIsAdmin(false);
                 setAdminInfo(null);
                 setOtp('');
+                setTrustDevice(false);
               }}
               className="w-full text-[#1A4D2E] py-2 text-sm hover:underline"
               data-testid="back-btn"
