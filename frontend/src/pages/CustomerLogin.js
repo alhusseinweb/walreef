@@ -203,8 +203,17 @@ export default function CustomerLogin() {
     try {
       if (selectedRole === 'admin') {
         // Admin/Staff login
-        const response = await api.post('/auth/admin/verify-otp', { phone, code: otp });
+        const response = await api.post('/auth/admin/verify-otp', { 
+          phone, 
+          code: otp,
+          trust_device: trustDevice  // Send trust device preference
+        });
         const token = response.data.access_token;
+        
+        // Store device token if provided (device was trusted)
+        if (response.data.device_token) {
+          storeDeviceToken(response.data.device_token, phone);
+        }
         
         // Decode token to get role
         const decoded = jwtDecode(token);
