@@ -1,11 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, Link } from 'react-router-dom';
-import { Phone, Key, Shield, AlertTriangle, X, Headphones } from 'lucide-react';
+import { Phone, Key, Shield, AlertTriangle, X, Headphones, Smartphone } from 'lucide-react';
 import api from '../utils/api';
 import { setAuthToken } from '../utils/auth';
 import { toast } from 'sonner';
 import { jwtDecode } from 'jwt-decode';
+
+// Helper functions for device token management
+const DEVICE_TOKEN_KEY = 'trusted_device_token';
+const DEVICE_PHONE_KEY = 'trusted_device_phone';
+
+const getStoredDeviceToken = () => localStorage.getItem(DEVICE_TOKEN_KEY);
+const getStoredDevicePhone = () => localStorage.getItem(DEVICE_PHONE_KEY);
+const storeDeviceToken = (token, phone) => {
+  localStorage.setItem(DEVICE_TOKEN_KEY, token);
+  localStorage.setItem(DEVICE_PHONE_KEY, phone);
+};
+const clearDeviceToken = () => {
+  localStorage.removeItem(DEVICE_TOKEN_KEY);
+  localStorage.removeItem(DEVICE_PHONE_KEY);
+};
 
 export default function CustomerLogin() {
   const { t } = useTranslation();
