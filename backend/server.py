@@ -559,8 +559,31 @@ async def admin_verify_otp(request: VerifyOTPRequest):
             "type": "admin" if role == "admin" else "staff"
         })
         
+        # Handle device trust if requested
+        device_token = None
+        if request.trust_device:
+            # Generate a secure device token
+            device_token = secrets.token_urlsafe(48)
+            
+            # Calculate expiry date (90 days from now)
+            expires_at = datetime.now(timezone.utc) + timedelta(days=TRUSTED_DEVICE_DAYS)
+            
+            # Store trusted device
+            trusted_device_data = {
+                "id": str(uuid.uuid4()),
+                "phone": international_phone,
+                "device_token": device_token,
+                "device_info": None,  # Could add user agent info here
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "expires_at": expires_at.isoformat(),
+                "last_used_at": datetime.now(timezone.utc).isoformat()
+            }
+            
+            await db.trusted_devices.insert_one(trusted_device_data)
+            logger.info(f"Trusted device added for: {admin.get('name')} ({role})")
+        
         logger.info(f"Admin/Staff logged in via OTP: {admin.get('name')} ({role})")
-        return TokenResponse(access_token=token)
+        return TokenResponse(access_token=token, device_token=device_token)
     except HTTPException:
         raise
     except Exception as e:
