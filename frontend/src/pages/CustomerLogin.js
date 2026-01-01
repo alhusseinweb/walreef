@@ -177,8 +177,20 @@ export default function CustomerLogin() {
     }
   };
 
-  const handleRoleSelection = (role) => {
+  const handleRoleSelection = async (role) => {
     setSelectedRole(role);
+    
+    // If admin role selected and device is trusted, auto-login
+    if (role === 'admin' && adminInfo?.is_trusted_device) {
+      await loginWithTrustedDevice();
+      return;
+    }
+    
+    // If admin role selected but not trusted device, need to send OTP
+    if (role === 'admin' && !adminInfo?.is_trusted_device) {
+      // OTP was already sent when checking admin phone
+    }
+    
     setStep(3); // Move to OTP step
   };
 
