@@ -399,6 +399,100 @@ async def get_customer_invoices(
 
 # ================ Admin Authentication ================
 
+# Constants for trusted devices
+TRUSTED_DEVICE_DAYS = 90  # Device trust duration
+
+@api_router.post("/auth/check-trusted-device")
+async def check_trusted_device(request: CheckTrustedDeviceRequest):
+    """Check if device is trusted and can skip OTP"""
+    try:
+        international_phone = format_phone_for_twilio(request.phone)
+        
+        # Check if this phone belongs to an admin/staff
+        admin = await db.admins.find_one({"phone": international_phone}, {"_id": 0})
+        
+        if not admin:
+            return {"trusted": False, "reason": "not_admin"}
+        
+        # Check for trusted device
+        trusted_device = await db.trusted_devices.find_one({
+            "phone": international_phone,
+            "device_token": request.device_token,
+            "expires_at": {"$gt": datetime.now(timezone.utc).isoformat()}
+        }, {"_id": 0})
+        
+        if trusted_device:
+            # Update last used
+            await db.trusted_devices.update_one(
+                {"id": trusted_device["id"]},
+                {"$set": {"last_used_at": datetime.now(timezone.utc).isoformat()}}
+            )
+            
+            # Check if also customer
+            customer = await db.customers.find_one({"phone": international_phone}, {"_id": 0})
+            
+            return {
+                "trusted": True,
+                "is_admin": True,
+                "is_also_customer": customer is not None,
+                "role": admin.get("role", "admin"),
+                "name": admin.get("name", ""),
+                "customer_name": customer.get("name", "") if customer else ""
+            }
+        
+        return {"trusted": False, "reason": "device_not_trusted"}
+    except Exception as e:
+        logger.error(f"Error checking trusted device: {e}")
+        return {"trusted": False, "reason": "error"}
+
+@api_router.post("/auth/login-trusted-device", response_model=TokenResponse)
+async def login_with_trusted_device(request: CheckTrustedDeviceRequest):
+    """Login using trusted device without OTP"""
+    try:
+        international_phone = format_phone_for_twilio(request.phone)
+        
+        # Check if this phone belongs to an admin/staff
+        admin = await db.admins.find_one({"phone": international_phone}, {"_id": 0})
+        
+        if not admin:
+            raise HTTPException(status_code=401, detail="غير مصرح | Unauthorized")
+        
+        # Verify trusted device
+        trusted_device = await db.trusted_devices.find_one({
+            "phone": international_phone,
+            "device_token": request.device_token,
+            "expires_at": {"$gt": datetime.now(timezone.utc).isoformat()}
+        }, {"_id": 0})
+        
+        if not trusted_device:
+            raise HTTPException(status_code=401, detail="الجهاز غير موثوق | Device not trusted")
+        
+        # Update last used
+        await db.trusted_devices.update_one(
+            {"id": trusted_device["id"]},
+            {"$set": {"last_used_at": datetime.now(timezone.utc).isoformat()}}
+        )
+        
+        # Get role
+        role = admin.get("role", "admin")
+        
+        # Generate JWT with role
+        token = create_jwt_token({
+            "admin_id": admin["id"],
+            "phone": admin["phone"],
+            "name": admin.get("name", ""),
+            "role": role,
+            "type": "admin" if role == "admin" else "staff"
+        })
+        
+        logger.info(f"Admin/Staff logged in via trusted device: {admin.get('name')} ({role})")
+        return TokenResponse(access_token=token)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error login with trusted device: {e}")
+        raise HTTPException(status_code=500, detail="Failed to login")
+
 @api_router.post("/auth/check-admin-phone")
 async def check_admin_phone(request: SendOTPRequest):
     """Check if phone belongs to admin/staff and send OTP"""
