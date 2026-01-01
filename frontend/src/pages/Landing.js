@@ -281,14 +281,24 @@ export default function Landing() {
       <footer className="bg-[#1A4D2E] text-white py-8">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="flex flex-col items-center gap-4">
-            {/* Terms Link */}
-            <Link 
-              to="/terms" 
-              className="text-emerald-200 hover:text-white transition-colors text-sm underline"
-              data-testid="terms-link"
-            >
-              {i18n.language === 'ar' ? 'الشروط والأحكام' : 'Terms and Conditions'}
-            </Link>
+            {/* Legal Links */}
+            <div className="flex items-center gap-4">
+              <Link 
+                to="/terms" 
+                className="text-emerald-200 hover:text-white transition-colors text-sm underline"
+                data-testid="terms-link"
+              >
+                {i18n.language === 'ar' ? 'الشروط والأحكام' : 'Terms and Conditions'}
+              </Link>
+              <span className="text-emerald-300">|</span>
+              <Link 
+                to="/privacy" 
+                className="text-emerald-200 hover:text-white transition-colors text-sm underline"
+                data-testid="privacy-link"
+              >
+                {i18n.language === 'ar' ? 'سياسة الخصوصية' : 'Privacy Policy'}
+              </Link>
+            </div>
             
             {/* Copyright */}
             <p className="text-sm text-center" data-testid="footer-text">

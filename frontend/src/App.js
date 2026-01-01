@@ -8,6 +8,7 @@ import { isAuthenticated, isAdmin, isCustomer, isStaff, getUserRole } from "./ut
 // Lazy load pages
 const Landing = lazy(() => import("./pages/Landing"));
 const TermsAndConditions = lazy(() => import("./pages/TermsAndConditions"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CustomerLogin = lazy(() => import("./pages/CustomerLogin"));
 const CustomerRegister = lazy(() => import("./pages/CustomerRegister"));
 const CustomerDashboard = lazy(() => import("./pages/CustomerDashboard"));
@@ -78,6 +79,7 @@ function App() {
             {/* Public Routes */}
             <Route path="/" element={<Landing />} />
             <Route path="/terms" element={<TermsAndConditions />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/customer/login" element={<CustomerLogin />} />
             <Route path="/admin/login" element={<Navigate to="/customer/login" replace />} />
             
