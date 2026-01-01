@@ -33,6 +33,80 @@ export default function CustomerLogin() {
   const [adminInfo, setAdminInfo] = useState(null);
   const [suspendedModal, setSuspendedModal] = useState(null);
   const [selectedRole, setSelectedRole] = useState(null); // 'admin' or 'customer'
+  const [trustDevice, setTrustDevice] = useState(false); // Trust this device option
+  const [checkingTrustedDevice, setCheckingTrustedDevice] = useState(false);
+
+  // Check for trusted device on phone input
+  const checkTrustedDevice = async (phoneNumber) => {
+    const storedToken = getStoredDeviceToken();
+    const storedPhone = getStoredDevicePhone();
+    
+    if (!storedToken || !storedPhone) return false;
+    
+    // Check if stored phone matches (normalize for comparison)
+    const normalizedPhone = phoneNumber.replace(/\D/g, '');
+    const normalizedStoredPhone = storedPhone.replace(/\D/g, '');
+    
+    if (!normalizedStoredPhone.includes(normalizedPhone.slice(-9)) && 
+        !normalizedPhone.includes(normalizedStoredPhone.slice(-9))) {
+      return false;
+    }
+    
+    try {
+      setCheckingTrustedDevice(true);
+      const response = await api.post('/auth/check-trusted-device', {
+        phone: phoneNumber,
+        device_token: storedToken
+      });
+      
+      if (response.data.trusted) {
+        return response.data;
+      }
+      return false;
+    } catch (error) {
+      console.log('Device not trusted or error:', error);
+      clearDeviceToken();
+      return false;
+    } finally {
+      setCheckingTrustedDevice(false);
+    }
+  };
+
+  // Login with trusted device
+  const loginWithTrustedDevice = async () => {
+    const storedToken = getStoredDeviceToken();
+    
+    if (!storedToken || !phone) return;
+    
+    setLoading(true);
+    try {
+      const response = await api.post('/auth/login-trusted-device', {
+        phone,
+        device_token: storedToken
+      });
+      
+      const token = response.data.access_token;
+      const decoded = jwtDecode(token);
+      const role = decoded.role || 'admin';
+      const userType = decoded.type || 'admin';
+      const name = decoded.name || '';
+      
+      setAuthToken(token, userType, role, name);
+      toast.success(t('loginSuccess'));
+      
+      if (role === 'staff') {
+        navigate('/admin/redeem');
+      } else {
+        navigate('/admin/dashboard');
+      }
+    } catch (error) {
+      console.log('Trusted device login failed:', error);
+      clearDeviceToken();
+      toast.error('انتهت صلاحية الجهاز الموثوق، يرجى تسجيل الدخول مجدداً');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const sendOTP = async () => {
     if (!phone) {
