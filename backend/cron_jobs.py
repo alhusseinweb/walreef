@@ -345,6 +345,20 @@ async def sync_invoices_once(db_instance):
             upsert=True
         )
         
+        # Send email notification for automatic sync failure
+        try:
+            await send_sync_failure_notification(
+                db_instance,
+                sync_type="automatic",
+                error_message=error_message,
+                details={
+                    "نوع العملية": "مزامنة تلقائية",
+                    "Operation type": "Automatic sync"
+                }
+            )
+        except Exception as email_error:
+            print(f"[{datetime.now()}] Failed to send email notification: {email_error}")
+        
         return {
             "status": "failed",
             "error": error_message,
