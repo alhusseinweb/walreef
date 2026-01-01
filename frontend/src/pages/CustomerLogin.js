@@ -115,6 +115,31 @@ export default function CustomerLogin() {
     }
     setLoading(true);
     try {
+      // First, check if this is a trusted device for admin
+      const trustedResult = await checkTrustedDevice(phone);
+      
+      if (trustedResult && trustedResult.trusted) {
+        // This is a trusted device - show option to use it
+        setIsAdmin(true);
+        setAdminInfo({
+          name: trustedResult.name,
+          role: trustedResult.role,
+          is_also_customer: trustedResult.is_also_customer,
+          customer_name: trustedResult.customer_name,
+          is_trusted_device: true
+        });
+        
+        // If user has both roles, show role selection
+        if (trustedResult.is_also_customer) {
+          setStep(2);
+        } else {
+          // Auto-login with trusted device
+          await loginWithTrustedDevice();
+        }
+        return;
+      }
+      
+      // Not a trusted device - proceed with normal OTP flow
       // First check if this is an admin/staff phone
       const checkResponse = await api.post('/auth/check-admin-phone', { phone });
       
