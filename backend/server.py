@@ -19,6 +19,7 @@ from rewaa import rewaa_service
 from utils import format_phone_for_twilio, format_phone_for_display
 from rate_limiter import rate_limiter
 from audit_log import AuditLogger, AuditActions
+from email_service import send_sync_failure_notification, send_test_email, get_notification_email
 from security_utils import (
     validate_password_strength, 
     validate_points_amount, 
