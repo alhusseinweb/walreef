@@ -11,6 +11,7 @@ from datetime import datetime, timezone, timedelta
 import bcrypt
 import jwt
 import uuid
+import secrets
 
 from models import *
 from services import send_otp_sms, send_welcome_email, send_notification_email, generate_otp_code, verify_otp_twilio
