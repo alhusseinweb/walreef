@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Settings as SettingsIcon, ArrowRight, Save } from 'lucide-react';
+import { Settings as SettingsIcon, ArrowRight, Save, Mail, Send, CheckCircle, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import api from '../utils/api';
 import { toast } from 'sonner';
@@ -11,9 +11,13 @@ export default function AdminSettings() {
   const [settings, setSettings] = useState({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [notificationEmail, setNotificationEmail] = useState('');
+  const [sendingTestEmail, setSendingTestEmail] = useState(false);
+  const [testEmailSent, setTestEmailSent] = useState(false);
 
   useEffect(() => {
     fetchSettings();
+    fetchNotificationEmail();
   }, []);
 
   const fetchSettings = async () => {
@@ -31,6 +35,15 @@ export default function AdminSettings() {
     }
   };
 
+  const fetchNotificationEmail = async () => {
+    try {
+      const response = await api.get('/admin/settings/notification-email');
+      setNotificationEmail(response.data.email || '');
+    } catch (error) {
+      console.error('Error fetching notification email:', error);
+    }
+  };
+
   const updateSetting = async (key, value) => {
     setSaving(true);
     try {
@@ -41,6 +54,40 @@ export default function AdminSettings() {
       toast.error(t('updateFailed'));
     } finally {
       setSaving(false);
+    }
+  };
+
+  const updateNotificationEmail = async () => {
+    if (!notificationEmail) {
+      toast.error('يرجى إدخال البريد الإلكتروني');
+      return;
+    }
+    
+    setSaving(true);
+    try {
+      await api.put(`/admin/settings/notification-email?email=${encodeURIComponent(notificationEmail)}`);
+      toast.success('تم تحديث البريد الإلكتروني بنجاح');
+    } catch (error) {
+      console.error('Update notification email error:', error);
+      toast.error(error.response?.data?.detail || 'فشل تحديث البريد الإلكتروني');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const sendTestEmail = async () => {
+    setSendingTestEmail(true);
+    setTestEmailSent(false);
+    try {
+      await api.post('/admin/settings/test-email');
+      setTestEmailSent(true);
+      toast.success('تم إرسال رسالة الاختبار بنجاح');
+      setTimeout(() => setTestEmailSent(false), 5000);
+    } catch (error) {
+      console.error('Send test email error:', error);
+      toast.error(error.response?.data?.detail || 'فشل إرسال رسالة الاختبار');
+    } finally {
+      setSendingTestEmail(false);
     }
   };
 
