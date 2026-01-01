@@ -164,6 +164,102 @@ export default function Landing() {
         )}
       </AnimatePresence>
 
+      {/* Contact Modal */}
+      <AnimatePresence>
+        {showContactModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowContactModal(false)}
+            data-testid="contact-modal-overlay"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 relative overflow-hidden"
+              data-testid="contact-modal"
+            >
+              {/* Decorative background */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-100 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 opacity-50" />
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-amber-100 to-transparent rounded-full translate-y-1/2 -translate-x-1/2 opacity-50" />
+              
+              <button
+                onClick={() => setShowContactModal(false)}
+                className="absolute top-4 left-4 p-2 hover:bg-gray-100 rounded-full transition-colors z-10"
+                data-testid="close-contact-modal-btn"
+              >
+                <X className="w-6 h-6 text-gray-600" />
+              </button>
+
+              <div className="text-center relative z-10">
+                <div className="bg-gradient-to-br from-[#1A4D2E] to-emerald-700 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                  <MessageCircle className="w-10 h-10 text-white" />
+                </div>
+
+                <h2 className="text-2xl font-bold text-[#1A4D2E] mb-2">
+                  {i18n.language === 'ar' ? 'تواصل معنا' : 'Contact Us'}
+                </h2>
+                <p className="text-gray-500 mb-6">
+                  {i18n.language === 'ar' 
+                    ? 'يسعدنا تواصلكم معنا في أي وقت'
+                    : 'We are happy to hear from you anytime'}
+                </p>
+
+                {/* Phone/WhatsApp */}
+                <a 
+                  href="https://wa.me/966559489908"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-4 bg-gradient-to-r from-emerald-50 to-green-50 hover:from-emerald-100 hover:to-green-100 border-2 border-emerald-200 rounded-2xl p-4 mb-4 transition-all group"
+                >
+                  <div className="bg-[#25D366] w-12 h-12 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                    <Phone className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-right flex-1">
+                    <p className="text-sm text-gray-500 mb-1">
+                      {i18n.language === 'ar' ? 'اتصال أو واتساب' : 'Call or WhatsApp'}
+                    </p>
+                    <p className="text-lg font-bold text-[#1A4D2E] tracking-wide" dir="ltr">
+                      0559489908
+                    </p>
+                  </div>
+                </a>
+
+                {/* Email */}
+                <a 
+                  href="mailto:info@walreef.com"
+                  className="flex items-center gap-4 bg-gradient-to-r from-amber-50 to-yellow-50 hover:from-amber-100 hover:to-yellow-100 border-2 border-amber-200 rounded-2xl p-4 mb-6 transition-all group"
+                >
+                  <div className="bg-[#FFC107] w-12 h-12 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                    <Mail className="w-6 h-6 text-[#1A4D2E]" />
+                  </div>
+                  <div className="text-right flex-1">
+                    <p className="text-sm text-gray-500 mb-1">
+                      {i18n.language === 'ar' ? 'البريد الإلكتروني' : 'Email'}
+                    </p>
+                    <p className="text-lg font-bold text-[#1A4D2E]">
+                      info@walreef.com
+                    </p>
+                  </div>
+                </a>
+
+                <button
+                  onClick={() => setShowContactModal(false)}
+                  className="w-full bg-[#1A4D2E] text-white py-3 rounded-xl font-bold hover:bg-[#143d24] transition-colors"
+                  data-testid="contact-modal-close-btn"
+                >
+                  {i18n.language === 'ar' ? 'إغلاق' : 'Close'}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* How It Works */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4 max-w-6xl">
