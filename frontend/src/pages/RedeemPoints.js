@@ -216,7 +216,7 @@ export default function RedeemPoints() {
               ) : (
                 <>
                   <Search className="w-5 h-5" />
-                  <span>بحث</span>
+                  <span>{t('search')}</span>
                 </>
               )}
             </button>
