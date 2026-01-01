@@ -1152,6 +1152,62 @@ async def toggle_sync(enabled: bool, current_admin: dict = Depends(get_current_a
         logger.error(f"Error toggling sync: {e}")
         raise HTTPException(status_code=500, detail="Failed to toggle sync")
 
+# ================ Email Notification Settings ================
+
+@api_router.get("/admin/settings/notification-email")
+async def get_notification_email_setting(current_admin: dict = Depends(get_current_admin)):
+    """Get the notification email address"""
+    try:
+        email = await get_notification_email(db)
+        return {"email": email}
+    except Exception as e:
+        logger.error(f"Error getting notification email: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get notification email")
+
+@api_router.put("/admin/settings/notification-email")
+async def update_notification_email_setting(email: str, current_admin: dict = Depends(get_current_admin)):
+    """Update the notification email address"""
+    try:
+        # Validate email format
+        import re
+        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(email_pattern, email):
+            raise HTTPException(status_code=400, detail="Invalid email format")
+        
+        await db.system_settings.update_one(
+            {"key": "notification_email"},
+            {"$set": {"value": email, "updated_at": datetime.now(timezone.utc).isoformat()}},
+            upsert=True
+        )
+        
+        logger.info(f"Notification email updated to {email} by {current_admin.get('name')}")
+        return {"message": "Notification email updated", "email": email}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating notification email: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update notification email")
+
+@api_router.post("/admin/settings/test-email")
+async def send_test_email_endpoint(current_admin: dict = Depends(get_current_admin)):
+    """Send a test email to verify email configuration"""
+    try:
+        result = await send_test_email(db)
+        
+        if result.get("success"):
+            return {
+                "message": "Test email sent successfully",
+                "recipient": result.get("recipient"),
+                "email_id": result.get("email_id")
+            }
+        else:
+            raise HTTPException(status_code=500, detail=result.get("error", "Failed to send test email"))
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error sending test email: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to send test email: {str(e)}")
+
 # ================ Staff Management ================
 
 @api_router.post("/admin/staff")
