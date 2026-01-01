@@ -174,15 +174,55 @@ export default function CustomerTransactions() {
                       </div>
 
                       {/* Date */}
-                      <div className="flex items-center gap-2 mt-3 text-xs text-gray-500 bg-gray-50 rounded-lg px-3 py-2">
-                        <Calendar className="w-3 h-3 flex-shrink-0" />
-                        <span data-testid={`trans-date-${index}`}>
-                          {new Date(trans.created_at).toLocaleDateString('ar-SA', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })}
-                        </span>
+                      <div className="flex flex-wrap items-center gap-2 mt-3 text-xs text-gray-500">
+                        <div className="flex items-center gap-2 bg-gray-50 rounded-lg px-3 py-2">
+                          <Calendar className="w-3 h-3 flex-shrink-0" />
+                          <span data-testid={`trans-date-${index}`}>
+                            {new Date(trans.created_at).toLocaleDateString('ar-SA', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric'
+                            })}
+                          </span>
+                        </div>
+                        
+                        {/* Expiry date for earned and manual_add transactions */}
+                        {(trans.transaction_type === 'earned' || trans.transaction_type === 'manual_add') && trans.points > 0 && (
+                          (() => {
+                            const expiryDate = getExpiryDate(trans.created_at);
+                            const expired = hasExpired(expiryDate);
+                            const aboutToExpire = isAboutToExpire(expiryDate);
+                            
+                            return (
+                              <div className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
+                                expired 
+                                  ? 'bg-red-50 text-red-600' 
+                                  : aboutToExpire 
+                                    ? 'bg-amber-50 text-amber-600' 
+                                    : 'bg-emerald-50 text-emerald-600'
+                              }`}>
+                                <Clock className="w-3 h-3 flex-shrink-0" />
+                                <span data-testid={`trans-expiry-${index}`}>
+                                  {expired ? (
+                                    'منتهية الصلاحية'
+                                  ) : aboutToExpire ? (
+                                    <>تنتهي قريباً: {expiryDate.toLocaleDateString('ar-SA', {
+                                      year: 'numeric',
+                                      month: 'short',
+                                      day: 'numeric'
+                                    })}</>
+                                  ) : (
+                                    <>تنتهي: {expiryDate.toLocaleDateString('ar-SA', {
+                                      year: 'numeric',
+                                      month: 'short',
+                                      day: 'numeric'
+                                    })}</>
+                                  )}
+                                </span>
+                              </div>
+                            );
+                          })()
+                        )}
                       </div>
                     </div>
                   </div>
