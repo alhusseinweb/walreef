@@ -379,7 +379,7 @@ export default function Landing() {
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="flex flex-col items-center gap-4">
             {/* Legal Links */}
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center justify-center gap-4">
               <Link 
                 to="/terms" 
                 className="text-emerald-200 hover:text-white transition-colors text-sm underline"
@@ -395,6 +395,14 @@ export default function Landing() {
               >
                 {i18n.language === 'ar' ? 'سياسة الخصوصية' : 'Privacy Policy'}
               </Link>
+              <span className="text-emerald-300">|</span>
+              <button 
+                onClick={() => setShowContactModal(true)}
+                className="text-emerald-200 hover:text-white transition-colors text-sm underline"
+                data-testid="contact-link"
+              >
+                {i18n.language === 'ar' ? 'تواصل معنا' : 'Contact Us'}
+              </button>
             </div>
             
             {/* Copyright */}
