@@ -119,7 +119,7 @@ export default function RedeemPoints() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50" dir={isArabic ? 'rtl' : 'ltr'}>
       {/* Header */}
       <header className="bg-[#1A4D2E] text-white p-4">
         <div className="max-w-md mx-auto">
@@ -134,13 +134,25 @@ export default function RedeemPoints() {
                 🎁 {t('pointsRedemption')}
               </h1>
             </div>
-            <button
-              onClick={logout}
-              className="bg-white/10 p-2 rounded-lg hover:bg-white/20"
-              data-testid="logout-btn"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-2">
+              {/* Language Toggle */}
+              <button
+                onClick={toggleLanguage}
+                className="bg-white/10 p-2 rounded-lg hover:bg-white/20 flex items-center gap-1"
+                data-testid="lang-toggle-btn"
+              >
+                <Globe className="w-4 h-4" />
+                <span className="text-xs font-medium">{isArabic ? 'EN' : 'ع'}</span>
+              </button>
+              {/* Logout Button */}
+              <button
+                onClick={logout}
+                className="bg-white/10 p-2 rounded-lg hover:bg-white/20"
+                data-testid="logout-btn"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
       </header>
